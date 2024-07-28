@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# fpp-serial-event uninstall script
-echo "Running fpp-serial-event uninstall Script"
+# fpp-lor-inputpup uninstall script
+echo "Running fpp-lor-inputpup uninstall Script"
 
 BASEDIR=$(dirname $0)
 cd $BASEDIR

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# fpp-serial-event install script
+# fpp-lor-inputpup install script
 
 BASEDIR=$(dirname $0)
 cd $BASEDIR
