@@ -1,0 +1,26 @@
+{
+	"repoName": "fpp-lor-inputpup",
+	"name": "LOR Input Pup Plugin for FPP",
+	"author": "Scott Hanson (computergeek1507)",
+	"description": "This Plugin Listens for LOR Input Pup Data and runs Commands based on it.",
+	"homeURL": "https://github.com/computergeek1507/fpp-lor-inputpup",
+	"srcURL": "https://github.com/computergeek1507/fpp-lor-inputpup.git",
+	"bugURL": "https://github.com/computergeek1507/fpp-lor-inputpup/issues",
+	"allowUpdates": 1,
+	"versions": [
+		{
+			"minFPPVersion": "7.0",
+			"maxFPPVersion": "7.99",
+			"branch": "main",
+			"sha": "",
+			"allowUpdates": 1
+		},
+		{
+			"minFPPVersion": "8.0",
+			"maxFPPVersion": "0",
+			"branch": "main",
+			"sha": "",
+			"allowUpdates": 1
+		}
+	]
+}
