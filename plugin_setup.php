@@ -28,7 +28,7 @@ $pluginJson = convertAndGetSettings();
 
 <div id="global" class="settings">
 <fieldset>
-<legend>FPP Serial Event Config</legend>
+<legend>FPP LOR Input Pup Config</legend>
 
 <script>
 
