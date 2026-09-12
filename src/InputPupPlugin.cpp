@@ -218,7 +218,13 @@ enum class LorRcvState {
     PROCESS_DATA
 };
 
-static const char* SERIALEVENT_API_PATH = "/SERIALEVENT";
+// Note: intentionally distinct from fpp-plugin-serial-events' "/SERIALEVENT"
+// path -- this plugin was forked from it, and FPP 10's plugin API registry
+// is a single global map keyed by literal path string with no per-plugin
+// namespacing, so two plugins registering the same path silently steal each
+// other's route (confirmed: with both installed, whichever registered last
+// answered for both).
+static const char* LORINPUTPUP_API_PATH = "/LORINPUTPUP";
 
 class InputPupPlugin : public FPPPlugin {
 public:
@@ -520,8 +526,8 @@ public:
     void HandleApi(const HttpRequestPtr &req, HttpCallback &&callback) {
         auto pieces = getPathPieces(req->path());
 
-        // pieces[0] is "SERIALEVENT"; a subpath (family route) lands here as
-        // pieces[1], e.g. "/SERIALEVENT/list" -> pieces = {"SERIALEVENT", "list"}.
+        // pieces[0] is "LORINPUTPUP"; a subpath (family route) lands here as
+        // pieces[1], e.g. "/LORINPUTPUP/list" -> pieces = {"LORINPUTPUP", "list"}.
         if (pieces.size() > 1) {
             const std::string &p1 = pieces[1];
             if (p1 == "list") {
@@ -543,7 +549,7 @@ public:
 
     void registerApis() override {
         FPPPlugins::registerPluginApi(
-            SERIALEVENT_API_PATH,
+            LORINPUTPUP_API_PATH,
             [this](const HttpRequestPtr &req, HttpCallback &&callback) {
                 HandleApi(req, std::move(callback));
             },
@@ -552,7 +558,7 @@ public:
     }
 
     void unregisterApis() override {
-        FPPPlugins::unregisterPluginApi(SERIALEVENT_API_PATH);
+        FPPPlugins::unregisterPluginApi(LORINPUTPUP_API_PATH);
     }
 };
 

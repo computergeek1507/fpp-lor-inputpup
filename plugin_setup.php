@@ -134,14 +134,14 @@ function SaveSerialEventItems() {
 }
 
 function RefreshLastMessages() {
-    $.get('api/plugin-apis/SERIALEVENT/list', function (data) {
+    $.get('api/plugin-apis/LORINPUTPUP/list', function (data) {
           $("#lastMessages").text(data);
         }
     );
 }
 
 function RefreshInputStatus() {
-    $.get('api/plugin-apis/SERIALEVENT/status', function (data) {
+    $.get('api/plugin-apis/LORINPUTPUP/status', function (data) {
         var status;
         try {
             status = typeof data === "string" ? JSON.parse(data) : data;
