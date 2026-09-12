@@ -5,7 +5,7 @@ debug: all
 
 OBJECTS_fpp_lor_inputpup_so += src/InputPupPlugin.o
 LIBS_fpp_lor_inputpup_so += -L/opt/fpp/src -lfpp
-CXXFLAGS_src/SerialEventPlugin.o += -I/opt/fpp/src
+CXXFLAGS_src/InputPupPlugin.o += -I/opt/fpp/src
 
 %.o: %.cpp Makefile
 	$(CCACHE) $(CC) $(CFLAGS) $(CXXFLAGS) $(CXXFLAGS_$@) -c $< -o $@

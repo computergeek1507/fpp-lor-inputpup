@@ -18,7 +18,7 @@ function convertAndGetSettings() {
         $json = json_decode($j, true);
         return $json;
     }
-    $j = "{\"port\":\"\",\"speed\":115200,\"serialEvents\":[]}";
+    $j = "{\"port\":\"\",\"speed\":19200,\"unitId\":\"0x01\",\"serialEvents\":[]}";
     return json_decode($j, true);
 }
 
@@ -108,19 +108,20 @@ function SaveSerialEventItem(row) {
 
 function SaveSerialEventItems() {
 
-    newserialeventConfig = { "port": '', "speed": 115200, "serialEvents": []};
+    newserialeventConfig = { "port": '', "speed": 19200, "unitId": "0x01", "serialEvents": []};
     var i = 0;
     $("#serialeventTableBody > tr").each(function() {
         newserialeventConfig["serialEvents"][i++] = SaveSerialEventItem(this);
     });
-    
+
     newserialeventConfig["port"] = document.getElementById("serialport").value;
     newserialeventConfig["speed"] = document.getElementById("serialspeed").value;
+    newserialeventConfig["unitId"] = document.getElementById("serialunitid").value;
 
     var data = JSON.stringify(newserialeventConfig);
     $.ajax({
         type: "POST",
-	url: 'api/configfile/plugin.serial-event.json',
+	url: 'api/configfile/plugin.lor-inputpup.json',
         dataType: 'json',
         async: false,
         data: data,
@@ -137,6 +138,27 @@ function RefreshLastMessages() {
           $("#lastMessages").text(data);
         }
     );
+}
+
+function RefreshInputStatus() {
+    $.get('api/plugin-apis/SERIALEVENT/status', function (data) {
+        var status;
+        try {
+            status = typeof data === "string" ? JSON.parse(data) : data;
+        } catch (e) {
+            return;
+        }
+        var inputs = status["inputs"] || [];
+        for (var i = 0; i < 8; i++) {
+            var el = $("#gpioStatus" + (i + 1));
+            var label = (i + 1) + ": " + (inputs[i] ? "ON" : "OFF");
+            if (inputs[i]) {
+                el.addClass("gpioOn").removeClass("gpioOff").text(label);
+            } else {
+                el.addClass("gpioOff").removeClass("gpioOn").text(label);
+            }
+        }
+    });
 }
 
 
@@ -175,13 +197,31 @@ $(document).ready(function() {
         $(this).addClass('selectedEntry');
         EnableButtonClass('deleteEventButton');
     });
+
+    RefreshInputStatus();
+    setInterval(RefreshInputStatus, 1000);
 });
 
 </script>
 
+<style>
+.gpioStatusBox { display: inline-block; width: 60px; margin: 2px; padding: 4px 0; text-align: center; border-radius: 4px; font-weight: bold; color: #fff; }
+.gpioOff { background-color: #888; }
+.gpioOn { background-color: #2e8b2e; }
+</style>
+
 <div>
 Serial Port:<input type='text' id='serialport' minlength='7' maxlength='30' size='15' class='serialport' />
 Speed:<input type='number' id='serialspeed' class='serialspeed' />
+LOR Unit Id:<input type='text' id='serialunitid' minlength='1' maxlength='4' size='4' class='serialunitid' placeholder='0x01' />
+<div>
+Input Status:
+<?
+for ($i = 1; $i <= 8; $i++) {
+    echo "<span id='gpioStatus$i' class='gpioStatusBox gpioOff'>$i: OFF</span>";
+}
+?>
+</div>
 <div>
 <table border=0>
 <tr><td colspan='2'>
@@ -235,6 +275,7 @@ $.each(serialEventConfig["serialEvents"], function( key, val ) {
 
 document.getElementById("serialport").value = serialEventConfig["port"];
 document.getElementById("serialspeed").value = serialEventConfig["speed"];
+document.getElementById("serialunitid").value = serialEventConfig["unitId"];
 
 
 </script>

@@ -1,13 +1,16 @@
-The Serial Event Plugin can be use to respond to Serial events by invoking FPP Commands.
+The LOR Input Pup Plugin polls a LOR "Input Pup" device on a serial port using the standard LOR heartbeat/poll protocol and can respond to button presses by invoking FPP Commands.
+<p>
+Configure the Serial Port, Speed, and LOR Unit Id (hex, e.g. 0x01) that match the Input Pup device's DIP switch settings.
+<p>
+Each button press/release is reported as an event string in the form <code>LOR:&lt;unitId&gt;:&lt;input&gt;:&lt;state&gt;</code>, where <code>input</code> is 1-8 and <code>state</code> is <code>1</code> for pressed and <code>0</code> for released. For example, <code>LOR:1:3:1</code> means input 3 on unit 0x01 was just pressed.
 <p>
 For each Event added, the following fields need to be configured:
 <p>
 <ol>
-<li>Description - this is a short description of what the event does.  This is ignored by FPP, but can be used to help you organized the events.</li>
-<li>Condition - these are conditions to filter in/out events based on the bytes in the message sent from the MIDI device.  For example, you could apply a condition to only respond to button down states instead of up and down.</li>
-<li>Command - the FPP Command to execute.
+<li>Description - this is a short description of what the event does.  This is ignored by FPP, but can be used to help you organize the events.</li>
+<li>Condition - these are conditions to filter in/out events based on the event string. For example, use "Ends With" with a value of ":3:1" to only respond to input 3 being pressed, or ":3:0" for input 3 being released.</li>
+<li>Modifier - optionally transform the matched event string (e.g. a Regex to extract the input number) before it is passed to the Command as %VAL%.</li>
+<li>Command - the FPP Command to execute.</li>
+</ol>
 <p>
-If the parameter starts with a single equal sign, it will be evaluated as a simple mathamatical formula.  For example, you can create a red color that is scaled from the velocity of the key press (usually byte 3, values 0-127) by using a formula like "=rgb(b3*2,0,0)".  You can also use variable names for the various parts of: "note" for the note (same as b2), "velocity" (same as b3), "channel" (lower 4 bits of b1), and pitch (b3 and b2, range -8192 to 8191).  For example, the formula above can be "=rgb(velocity*2,0,0)".
-<p>
-<p>
-The "Last Messages" section in the upper right displays the last 25 messages that FPPD has received.  Clicking Refresh will refresh the list.  These can be used to help identify which parameters are being used to help define conditions.
+The "Last Messages" section in the upper right displays the last 25 events that FPPD has received from the Input Pup device.  Clicking Refresh will refresh the list.  These can be used to help identify which unit/input numbers to use in your conditions.
